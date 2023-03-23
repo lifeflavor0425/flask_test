@@ -31,7 +31,7 @@ app = Flask(__name__)
 def login():
     # method별 분기
     if request.method == "GET":
-        return "hello world"
+        return render_template("login.html")
     else:
         # 1. 로그인 정보 획득
         uid = request.form.get("uid")
