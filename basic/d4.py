@@ -5,7 +5,19 @@ import pymysql as my
 
 
 def select_login(uid, upw):
+    """
+    아이디, 비밀번호를 넣어서 회원여부를 체크하는 함수
+    parameter
+        - uid : 아이디
+        - upw : 비밀번호
+    returns
+        - 회원인 경우
+            - { ... }
+        - 비회원인 경우, 비디측 오류
+            - None
+    """
     connection = None
+    row = None
     try:
         connection = my.connect(
             host="localhost",
@@ -29,10 +41,11 @@ def select_login(uid, upw):
     finally:
         if connection:
             connection.close()
+    # 로그인한 결과를 리턴  -> { ... }
     return row
 
 
 if __name__ == "__main__":
     # d4 개발자의 테스트 코드
     # f5 개발자가 사용할 때는 작동 안함
-    select_login()
+    select_login("guest", "1234")
