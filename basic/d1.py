@@ -29,7 +29,34 @@
         +--------------------+
     4. 현재 작업(사용)할 데이터베이스 지정
         use ml_db ; 
-        
+    5. 고객 테이블 생성
+    CREATE TABLE `users` (
+        `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT '고객 고유 ID',
+        `uid` VARCHAR(32) NOT NULL COMMENT '고객 로그인 아이디' COLLATE 'utf8mb4_general_ci',
+        `upw` VARCHAR(128) NOT NULL COMMENT '고객 로그인 비번' COLLATE 'utf8mb4_general_ci',
+        `name` VARCHAR(32) NOT NULL COMMENT '고객 이름' COLLATE 'utf8mb4_general_ci',
+        `regdate` TIMESTAMP NOT NULL COMMENT '고객 가입일',
+        PRIMARY KEY (`id`) USING BTREE,
+        UNIQUE INDEX `uid` (`uid`) USING BTREE
+    )
+    COMMENT='고객 테이블'
+    COLLATE='utf8mb4_general_ci'
+    ENGINE=InnoDB
+    ;
+    +---------+--------------+------+-----+---------+----------------+
+    | Field   | Type         | Null | Key | Default | Extra          |
+    +---------+--------------+------+-----+---------+----------------+
+    | id      | int(11)      | NO   | PRI | NULL    | auto_increment |
+    | uid     | varchar(32)  | NO   | UNI | NULL    |                |
+    | upw     | varchar(128) | NO   |     | NULL    |                |
+    | name    | varchar(32)  | NO   |     | NULL    |                |
+    | regdate | timestamp    | NO   |     | NULL    |                |
+    +---------+--------------+------+-----+---------+----------------+
+    5-1 스키마 수정
+    ALTER TABLE `users`
+	CHANGE COLUMN `name` `name` VARCHAR(32) NOT NULL COMMENT '고객 이름' COLLATE 'utf8mb4_general_ci' AFTER `upw`,
+	CHANGE COLUMN `regdate` `regdate` TIMESTAMP NOT NULL COMMENT '고객 가입일' AFTER `name`;
+
 """
 import pymysql as my
 
