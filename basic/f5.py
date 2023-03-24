@@ -21,10 +21,22 @@
             - age = request.form.get('age')
             
 """
-from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import Flask, render_template, jsonify, request, redirect, url_for, session
 from d4 import select_login
 
 app = Flask(__name__)
+# 세션을 위해서 시크릿 키 지정
+app.secret_key = "al;skdfjalsdj"  # 임의값, 통상 해시값 활용
+
+
+# 로그인을 하여 세션을 얻은 후 홈페이지를 진행해야 사이트의 내용을 보여주겠다 => 컨셉
+@app.route("/")
+def home():
+    if "uid" not in session:
+        # return redirect('/login') # url을 사용할 때는 하드코딩 하지 않는다
+        # url_for('사용하고자 하는 URL과 연결된 함수명을 기입')
+        return redirect(url_for("login"))
+    return "hi"
 
 
 # 메소드 추가는 => methods=['POST', ...]
@@ -42,9 +54,15 @@ def login():
         result = select_login(uid, upw)
         # 3. 회원이면
         if result:
-            pass
-        # 3-1. 세션생성, 기타 필요한 조치 수행
-        # 3-2. 서비스 메인 화면으로 이동
+            # 세션 : 클라이언트 정보를 서버가 메모리상에 유지하면서,
+            #        클라이언트가 간편하게 웹을 이용할 수 있도록 도움을 줌
+            #        단점 : 접속 유저가 많으면 서버측 메모리에 부하가 온다 -> 대체제 필요/대안 필요
+            #        JWT를 사용하여 보안(사이트 구성시 인증쪽에서 활용: 차주 진행)
+            # 3-1. 세션 생성, 기타 필요한 조치 수행
+            session["uid"] = uid
+            # 3-2. 서비스 메인 화면으로 이동
+            return redirect(url_for("home"))
+
         # 4. 회원아니면
         else:
             print("회원이 아니다!!!")
