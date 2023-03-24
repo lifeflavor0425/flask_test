@@ -56,8 +56,46 @@
     ALTER TABLE `users`
 	CHANGE COLUMN `name` `name` VARCHAR(32) NOT NULL COMMENT '고객 이름' COLLATE 'utf8mb4_general_ci' AFTER `upw`,
 	CHANGE COLUMN `regdate` `regdate` TIMESTAMP NOT NULL COMMENT '고객 가입일' AFTER `name`;
-
+    6. 회원가입 -> insert
+        - insert into users () values ();
+        - ex) 
+            Insert into
+                users
+                (`uid`,`upw`,`name`,`regdate`)
+            values
+                ('guest','1234','게스트', now());
+                
+    7. 로그인 -> select
+        - select * from (table)
+        - 대소문자 구분 안한다.
+        
+    8. 회원 정보 수정 -> update
+    
+    9. 회원 탈퇴 -> delete
+        - 1년간 보관?, 완전 삭제?
+"""
+"""
+    파이썬에서 DB에 접속, 접속해제
 """
 import pymysql as my
 
-db = my.Connect()
+connection = None
+# 1. 접속
+try:
+    connection = my.connect(
+        host="localhost",  # 127.0.0.1
+        # port=3306,                          # 포트
+        user="root",  # 사용자 계정,  root 게정 아닌것 사용 권장
+        password="12341234",  # 비밀번호
+        database="ml_db",  # 접속할 db
+        # cursorclass=my.cursors.DictCursor
+    )
+except Exception as e:
+    print("접속 오류", e)
+else:
+    print("접속 ")
+finally:
+    # 2. 접속 종료(I/O) -> close()
+    if connection:
+        connection.close()
+        print("접속 종료")
