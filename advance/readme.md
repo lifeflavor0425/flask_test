@@ -11,10 +11,17 @@
 
     - 사이트, 주제별 페이징 분할 처리
 
-# 부트스트랩
+# 부트스트랩 <-> 머터리얼
 
     - 부트스트랩 적용, 베이스 페이지 구성
+        - https://getbootstrap.com/docs/5.3/examples/
+            - 다양한 UI 형태 예시로 제공
     - 디자인 적용 기준 설정
+        - static 밑에 공통으로 사용할 CSS(부트스트랩) 적용
+            - SASS를 사용하는 회사도 존재 > CSS -> sass 로 넘어가는 추세
+    - flask-bootstrap -> 2017
+        - 부스트랩 버전 3.x -> 사용안함
+            - bootstrap.min.css(or js)
 
 # 입력 폼 유효성
 
