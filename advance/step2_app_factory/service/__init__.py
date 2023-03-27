@@ -10,9 +10,27 @@ from flask import Flask
 
 def create_app():
     app = Flask(__name__)
-
+    # 환경 변수 초기화
+    init_environment(app)
     init_blueprint(app)
     return app
+
+
+def init_environment(app):
+    # 특정파일(cfg, ...)등을 읽어서 처리 가능
+    app.config.from_pyfile("./resource/config.cfg", silent=True)
+
+    from . import config as config
+
+    # py를 모듈가져오기 해서(객체)를 세팅해서 처리
+    app.config.from_object(config)
+    # 환경변수(os레벨, 플라스크레벨, 사용자정의 레벨) 모두 출력
+    print("\n" + "-" * 20)
+    # 개별 환경 변수값 추출
+    print(app.config['SECRET_KEY'])
+    # for k, v in app.config.items():
+    #     print(k, v)
+    print("-" * 20 + "\n")
 
 
 def init_blueprint(app):
