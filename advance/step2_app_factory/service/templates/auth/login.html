@@ -8,10 +8,17 @@
     {# jQuery-cookies CDN #}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     {# 쿠키(서버/클라이언트 모두저장) #}
-    
+
     <script>
         $('button').on('click', ()=>{
             console.log('로그인 버튼을 눌렀다')
+            $.post({
+                url : '/auth/login',
+                data:{uid : 'guest', upw : '1234'},
+                success : res => {
+                    console.log(res)
+                }
+            })
         })
     </script>
 {% endblock%}
