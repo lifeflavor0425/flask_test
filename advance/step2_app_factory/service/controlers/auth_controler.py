@@ -56,6 +56,7 @@ def signup():
     # 암호화
     b = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
     # 확인 및 복호화
+    # bcrypt.checkpw() => 이것으로 암호가 일치하는지만 체크해서 로그인시 활용
     print(password, b, bcrypt.checkpw(password.encode("utf-8"), b))
 
     return "auth signup"
