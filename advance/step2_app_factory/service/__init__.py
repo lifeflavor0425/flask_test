@@ -12,8 +12,20 @@ def create_app():
     app = Flask(__name__)
     # 환경 변수 초기화
     init_environment(app)
+    # 데이터 베이스 초기화
+    init_database(app)
+    # 블루프린트 초기화
     init_blueprint(app)
     return app
+
+
+def init_database(app):
+    # pool
+    from .model import pool_sql
+
+    pool_sql.init_pool()
+    # 테스트
+    print(pool_sql.login("guest", "1234"))
 
 
 def init_environment(app):
@@ -27,7 +39,7 @@ def init_environment(app):
     # 환경변수(os레벨, 플라스크레벨, 사용자정의 레벨) 모두 출력
     print("\n" + "-" * 20)
     # 개별 환경 변수값 추출
-    print(app.config['SECRET_KEY'])
+    print(app.config["SECRET_KEY"])
     # for k, v in app.config.items():
     #     print(k, v)
     print("-" * 20 + "\n")
