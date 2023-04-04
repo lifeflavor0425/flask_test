@@ -3,15 +3,44 @@
     - 라우트 : URL과 이를 처리할 함수 연계
     - 비즈니스 로직 : 사용자가 요청하는 주 내용을 처리하는 곳
 """
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, Response
 from service.controlers import bp_main as main
 from service.forms import FormQuestion
+from flask import current_app
+
+# jwt
+import jwt
+
+# 시간 관련
+import time
+from datetime import datetime
 
 
 # ~/main/
 @main.route("/")
 def home():
-    return render_template("index.html")
+    # 1. 쿠키중에 토큰 획득 -> 실패 : 401
+    token = request.cookies.get("token")
+    SECRET_KEY = current_app.config["SECRET_KEY"]
+    print(token, SECRET_KEY)
+    if not token or not SECRET_KEY:
+        return Response(status=401)
+
+    try:
+        # 2. 디코딩 -> 실패 : 401
+        payload = jwt.decode(token, key=SECRET_KEY, algorithms=["HS256"])
+        # 3. 유효 날짜 추출, 현제 시간 기준보다 과거인지 체크 => 과거 : 만료 -> 401
+        if payload["exp"] < time.mktime(datetime.utcnow().timetuple()):
+            return Response(status=401)
+        # 4. 정상
+        return render_template("index.html")
+
+    except jwt.InvalidTokenError:
+        return Response(status=401)
+    except jwt.ExpiredSignatureError:
+        return Response(status=401)
+    except jwt.exceptions.DecodeError:
+        return Response(status=401)
 
 
 @main.route("/question", methods=["GET", "POST"])
