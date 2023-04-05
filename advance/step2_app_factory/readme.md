@@ -178,17 +178,78 @@
     - 위의 명령들 3개를 차례대로 수행해서 데이터베이스 초기화, 생성과정을 수행
 
     - 필요한 기능들 시뮬레이션
+
       - DBA sql문을 작성해서 쿼리 구현
       - ORM에서는 shell을 열어서 파이썬 코드로 구현
       - flask --app service shell
-        - 질문 등록
-          ```
-          from service.model.models import Question, Answer
-          from datetime import datetime
-          from service import db
 
-          q1 = Question(title="질문1", content="내용1", reg_date=datetime.now())
-          db.session.add(q1)
-          db.session.commit()
+        - 질문 등록
+
           ```
+            from service.model.models import Question, Answer
+            from datetime import datetime
+            from service import db
+
+            q1 = Question(title="질문1", content="내용1", reg_date=datetime.now())
+            db.session.add(q1)
+            db.session.commit()
+          ```
+
         - 질문 조회
+          ```
+          # 전체 데이터 조회 : select * from question;
+            qs = Question.query.all()
+            qs[0]
+            qs[0].title
+            >>'질문1'
+            # id 값을 넣어서 조회 : select * from question where id=1;
+            >> Question.query.get(1)
+            # 내용중에 '용' 문자열이 존재하면 다가져오시오
+            # select * from question where content like '%용%'
+            Question.query.filter(Question.content.like('%용%')).all()
+          ```
+        - 질문 수정
+          ```
+            q1.title
+            >>'질문1'
+            # 변경하고 싶은 부분은 수정
+            # update question set title = '질문1111' where id=1;
+            q1.title = "질문1111"
+            db.session.commit()
+            q1.title
+            >>'질문1111'
+          ```
+        - 질문 삭제
+
+        ```
+            # delete from question where id=1;
+            >>> db.session.delete(q1)
+            >>> db.session.commit()
+        ```
+
+        - ## 답변 등록
+
+        ```
+            # 답변 생성
+            a = Answer(question = Question.query.get(2), content="질문에 대한 답변입니다", reg_date=datetime.now())
+            # 등록
+            db.session.add(a)
+            # 커밋
+            db.session.commit()
+        ```
+
+    - 답변을 통해서 질문 찾기
+      ```
+          a.question
+          >>> <Question 2>
+      ```
+    - 질문을 통해서 답변 찾기
+      ```
+          Question.query.get(2).answer_set
+          >>> [<Answer 1>]
+      ```
+    - 질문을 삭제하면 답변도 다 삭제되는가?
+      ```
+          db.session.delete(a)
+          db.session.commit()
+      ```
